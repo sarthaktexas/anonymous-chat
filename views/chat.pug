@@ -1,0 +1,35 @@
+extends layout
+
+block content
+  //div
+    canvas.whiteboard
+    .colors
+      .color.black
+      .color.red
+      .color.green
+      .color.blue
+      .color.yellow
+      .color.white
+  #messagebox
+    ul#messages
+  form.form-inline#chatForm(action='/', method='POST')
+    .form-group
+      input.form-control.mr-2.mb-2#txt(autocomplete='off', autofocus='on', oninput='updateScroll()', placeholder='type yo\' message here')
+      button.btn.btn-primary Submit
+  script.
+    var socket = io.connect();
+    $('form').submit(function(e){
+        e.preventDefault();
+        socket.emit('chat_message', $('#txt').val());
+        $('#txt').val('');
+        return false;
+    });
+    socket.on('chat_message', function(msg){
+        $('#messages').append($('<li>').html(msg));
+    });
+    socket.on('is_online', function(username) {
+        $('#messages').append($('<li>').html(username));
+    });
+    var username = prompt('what\'s yo\' name');
+    socket.emit('username', username);
+  script(src='/javascripts/whiteboard.js')
