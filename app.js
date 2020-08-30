@@ -4,6 +4,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 app.set('view engine', 'pug');
 app.use(express.static('public'));
+var port = process.env.PORT || 3000
 app.get('/', function (req, res, next) {
   res.render('chat', {
     title: 'Chat'
@@ -22,6 +23,6 @@ io.sockets.on('connection', function(socket) {
   });
   socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
 });
-const server = http.listen(3000, function() {
+const server = http.listen(port, function() {
   console.log('listening on port 3000');
 });
